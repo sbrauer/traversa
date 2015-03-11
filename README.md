@@ -36,6 +36,16 @@ for your resource hierarchy and the HTTP methods you want to support.
 
 Note that a resource is not a model (in the MVC sense). How you choose to implement and use resources is up to you as the developer. If you use models, your resources could manipulate models much as you would with routes, or you could have models that implement the Resource interface. Traversa has no opinion other than that you should use Resources.
 
+Traversa splits the request path to obtain an array of names which it will attempt to traverse from the root down, asking each resource for the next child by name (using `#child`).
+Traversal ends when all names from the path are consumed, or when a resource doesn't respond
+to `#child`, or responds with nil (to indicate no such child resource exists).
+
+If all path names were successfully traversed, Traversa calls the appropriate HTTP method
+(`#get`, `#post`, etc) on the resource to generate a response, or it returns a 405 Method Not Allowed if the resource doesn't respond to that method.
+
+If not all path names were successfully traversed, Traversa generally responds with a 404.
+However PUT and DELETE requests are special cases. (TODO: go into detail)
+
 ### Why? Routes rock!
 
 I'm not suggesting that resource traversal is inherently better or that routes are bad.
