@@ -3,11 +3,6 @@ require 'sinatra/base'
 module Traversa
   class App < Sinatra::Base
 
-    # Status code to respond with when DELETE request
-    # received for a resource that can't be traversed to.
-    # Subclass may want to override with 404, 200, or some other status.
-    set :delete_missing_status, 204
-
     get     ('/*') { handle_request }
     post    ('/*') { handle_request }
     put     ('/*') { handle_request }
@@ -17,24 +12,19 @@ module Traversa
 
     def handle_request
       request_method = request.request_method.downcase.to_sym
+      request_method = :get if request_method == :head
+
       names = params[:splat].first.split('/')
       resource, subpath = traverse(root(request), names)
 
-      unless subpath.empty?
-        case request_method
-        when :delete
-          return settings.delete_missing_status
-        when :put
-          if subpath.length == 1
-            params[:subpath] = subpath.first
-          else
-            return 404
-          end
-        else
-          return 404
-        end
+      if subpath.empty?
+        handle_found(resource, request_method)
+      else
+        handle_missing(resource, request_method, subpath)
       end
+    end
 
+    def handle_found(resource, request_method)
       if resource.respond_to? request_method
         resource.send(request_method, self, request, params)
       else
@@ -42,9 +32,23 @@ module Traversa
       end
     end
 
+    def handle_missing(resource, request_method, subpath)
+      missing_method = "#{request_method}_missing".to_sym
+      if resource.respond_to? missing_method
+        resource.send(missing_method, self, request, params, subpath)
+      else
+        missing_status_code(request_method)
+      end
+    end
+
     # Subclasses of App should override to return an app-specific root Resource.
     def root(request)
       Root.new
+    end
+
+    # Subclasses of App could override to return different status codes.
+    def missing_status_code(request_method)
+      request_method == :delete ? 204 : 404
     end
 
     # Returns a tuple of the last resource traversed to and
