@@ -64,12 +64,23 @@ module Traversa
       [resource, names]
     end
 
+    # Returns array of parent resources for the given resource.
+    def resource_parents(resource)
+      if resource.parent
+        [resource.parent] + resource_parents(resource.parent)
+      else
+        []
+      end
+    end
+
     # Returns path (starting with "/")
     def resource_path(resource, subpath=[])
-      if resource.parent
-        resource_path(resource.parent, [resource.name] + subpath)
+      resources = resource_parents(resource).reverse + [resource]
+      names = resources.map { |r| r.name } + subpath
+      if names.length == 1
+        '/'
       else
-        "/#{subpath.join('/')}#{'/' unless subpath.empty?}"
+        names.join('/')
       end
     end
 
