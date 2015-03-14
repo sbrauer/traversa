@@ -20,6 +20,7 @@ module Traversa
         "",
         "parent: #{parent.inspect}",
         "resource_path: #{app.resource_path(self)}",
+        "resource_url: #{app.resource_url(self)}",
         "params: #{params.inspect}",
         "request: #{request.inspect}"
       ].join("\n")

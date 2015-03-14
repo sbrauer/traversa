@@ -86,7 +86,7 @@ module Traversa
 
     # Returns full url (protocol, host, port, etc)
     def resource_url(resource, subpath=[])
-      "FIXME"
+      url(resource_path(resource, subpath))
     end
 
   end
