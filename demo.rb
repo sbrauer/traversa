@@ -7,7 +7,7 @@ $LOAD_PATH.unshift File.expand_path('../lib', __FILE__)
 require 'traversa'
 
 class Demo < Traversa::App
-  def root(request)
+  def root
     Root.new
   end
 end

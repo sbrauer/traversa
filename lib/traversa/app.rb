@@ -15,7 +15,7 @@ module Traversa
       request_method = :get if request_method == :head
 
       names = params[:splat].first.split('/')
-      resource, subpath = traverse(root(request), names)
+      resource, subpath = traverse(root, names)
 
       if subpath.empty?
         handle_found(resource, request_method)
@@ -42,7 +42,7 @@ module Traversa
     end
 
     # Subclasses of App should override to return an app-specific root Resource.
-    def root(request)
+    def root
       Root.new
     end
 
