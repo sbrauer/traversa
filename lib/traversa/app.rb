@@ -46,25 +46,9 @@ module Traversa
       request_method == :delete ? 204 : 404
     end
 
-    # Subclasses of App should override to return an app-specific root Resource.
-    def root
-      FallbackRoot.new
-    end
-
     # Returns full url (with protocol, host, port, etc)
     def resource_url(resource, subpath=[])
       url(Traversa.resource_path(resource, subpath))
-    end
-  end
-
-  # A minimal empty root resource.
-  class FallbackRoot
-    def name
-      ''
-    end
-
-    def parent
-      nil
     end
   end
 end
