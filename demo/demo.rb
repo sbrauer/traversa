@@ -8,7 +8,6 @@ require 'traversa'
 
 # An minimal example Resource.
 class Resource
-
   attr_reader :name, :parent
 
   def initialize(name, parent)
@@ -28,7 +27,6 @@ class Resource
       "request: #{request.inspect}"
     ].join("\n")
   end
-
 end
 
 class Root < Resource
@@ -38,17 +36,13 @@ class Root < Resource
   end
 
   def child(name)
-    if name == 'foo'
-      Foo.new(name, self)
-    end
+    Foo.new(name, self) if name == 'foo'
   end
 end
 
 class Foo < Resource
   def child(name)
-    if name == 'bar'
-      Resource.new(name, self)
-    end
+    Resource.new(name, self) if name == 'bar'
   end
 end
 
