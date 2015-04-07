@@ -1,4 +1,4 @@
-# A trivial demo Traversa app.
+# A trivial single-file Traversa demo app.
 # Root resource has a sub-resource "foo" ("/foo")
 # which in turn has a sub-resource "bar" ("/foo/bar").
 
@@ -6,13 +6,37 @@ $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 
 require 'traversa'
 
-class Demo < Traversa::App
-  def root
-    Root.new
+# An minimal example Resource.
+class Resource
+
+  attr_reader :name, :parent
+
+  def initialize(name, parent)
+    @name = name
+    @parent = parent
   end
+
+  def get(app, request, params)
+    app.content_type 'text/plain'
+    [
+      "Hello! My name is #{name.inspect}.",
+      "",
+      "parent: #{parent.inspect}",
+      "resource_path: #{Traversa.resource_path(self)}",
+      "resource_url: #{app.resource_url(self)}",
+      "params: #{params.inspect}",
+      "request: #{request.inspect}"
+    ].join("\n")
+  end
+
 end
 
-class Root < Traversa::Root
+class Root < Resource
+  def initialize
+    @name = ''
+    @parent = nil
+  end
+
   def child(name)
     if name == 'foo'
       Foo.new(name, self)
@@ -20,13 +44,16 @@ class Root < Traversa::Root
   end
 end
 
-class Foo < Traversa::Resource
+class Foo < Resource
   def child(name)
     if name == 'bar'
-      Bar.new(name, self)
+      Resource.new(name, self)
     end
   end
 end
 
-class Bar < Traversa::Resource
+class Demo < Traversa::App
+  def root
+    Root.new
+  end
 end

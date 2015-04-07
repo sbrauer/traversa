@@ -1,7 +1,5 @@
 require 'traversa/version'
 require 'traversa/app'
-require 'traversa/resource'
-require 'traversa/root'
 
 module Traversa
   # Returns a TraversalResult object with the last resource traversed to and
