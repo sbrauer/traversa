@@ -1,7 +1,9 @@
 # Traversa
-Resource traversal for [Sinatra](http://www.sinatrarb.com/).
+A resource-oriented microframework for Ruby built on top of [Sinatra](http://www.sinatrarb.com/).
 
-## What the heck is resource traversal?
+## What do you mean by "resource-oriented"?
+First let's clarify that by "resource" I'm referring to the "R" in URL (Uniform Resource Locator).
+Traversa has the opinion that Resources are the primary abstraction that a webapp should be built around.
 Sinatra and many other frameworks have a concept of routing to map the path portion
 of incoming URLs to code.
 Resource traversal is an alternative concept that treats the path as a way to
@@ -34,7 +36,7 @@ A resource is simply a Ruby object that implements the following interface:
 Only `#name` and `#parent` are required. The others are optional. Implement only what you need
 for your resource hierarchy and the HTTP methods you want to support.
 
-Note that a resource is not a model (in the MVC sense). How you choose to implement and use resources is up to you as the developer. If you use models, your resources could manipulate models much as you would with routes, or you could have models that implement the Resource interface. Traversa has no opinion other than that you should use Resources.
+Note that a resource is not a model (in the MVC sense). How you choose to implement and use resources is up to you as the developer. If you use models (generally a good idea), your resources could manipulate models much as you would with routes/controllers, or you could have models that implement the Resource interface (hmm). Traversa has no opinion other than that you should use Resources.
 
 Traversa splits the request path to obtain an array of names which it will attempt to traverse from the root down, asking each resource for the next child by name (using `#child`).
 Traversal ends when all names from the path are consumed, or when a resource doesn't respond
@@ -52,10 +54,11 @@ I'm not suggesting that resource traversal is inherently better or that routes a
 It's just an alternative way to structure your app.
 
 Traversal is a natural fit for modeling urls that map to hierachical data. Instead of treating paths as opaque strings that may match route patterns, it treats the path string as a representation of an actual path.
-It acknowledges that URLs (Uniform Resource Locators) are about locating resources by making the concept of "resources" the fundamental building block of your web app.
+
+The Resource API allows resources to "get a handle" on other resources. You can call `#parent` to walk up the hierarchy and `#child` to walk down. You can obtain the path or url of a resource with `#resource_path` and `#resource_url`. If you've ever struggled with building urls within your application, you can imagine how handy this could be.
 
 With routes, it's possible to have "holes" in your url space. Consider an app that defines routes for `/a` and for `/a/b/c` but not for `/a/b`. A user that lands on `/a/b/c` might expect that they could remove `/c` from the url to "go up a level", but will get a 404. Such a thing is not possible when modeling your web app as a hierarchy of resources (unless the resource at `/a/b` doesn't implement the `#get` method, or implements it such that it intentionally returns a 404 response).
 
-The resource traversal approach also automates the process of generating URLs for resources. (TODO: implement a `#resource_url(resource)` method; just have `#resource_path(resource)` now). Given a resource, your app can "get a handle" on other resources by calling `#parent` to walk up the hierarchy or `#child(name)` to walk down.
-
 Traversal and routing can also co-exist; you could have routes for some requests and then fallback to traversal when no route matches. A hybrid approach like this would let you choose the best approach on a case-by-case basis, or it could be used while migrating a legacy route-based app to traversal. (TODO: document HOWTO)
+
+Since Resources are just Ruby objects, you can unit test them by instantiating one and testing the subset of Resource methods that you want it to support.
