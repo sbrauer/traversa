@@ -15,12 +15,12 @@ module Traversa
       request_method = :get if request_method == :head
 
       names = params[:splat].first.split('/')
-      resource, subpath = traverse(root, names)
+      result = Traversa.traverse(root, names)
 
-      if subpath.empty?
-        handle_found(resource, request_method)
+      if result.success?
+        handle_found(result.resource, request_method)
       else
-        handle_missing(resource, request_method, subpath)
+        handle_missing(result.resource, request_method, result.subpath)
       end
     end
 
@@ -41,53 +41,30 @@ module Traversa
       end
     end
 
-    # Subclasses of App should override to return an app-specific root Resource.
-    def root
-      Root.new
-    end
-
-    # Subclasses of App could override to return different status codes.
+    # Subclasses of App may override to return different status codes.
     def missing_status_code(request_method)
       request_method == :delete ? 204 : 404
     end
 
-    # Returns a tuple of the last resource traversed to and
-    # an array of names leftover after the last successful traversal.
-    def traverse(resource, names)
-      if resource.respond_to?(:child) && ! names.empty?
-        child = resource.child(names.first)
-        if child
-          names.shift
-          return traverse(child, names)
-        end
-      end
-      [resource, names]
+    # Subclasses of App should override to return an app-specific root Resource.
+    def root
+      FallbackRoot.new
     end
 
-    # Returns array of parent resources for the given resource.
-    def resource_parents(resource)
-      if resource.parent
-        [resource.parent] + resource_parents(resource.parent)
-      else
-        []
-      end
-    end
-
-    # Returns path (starting with "/")
-    def resource_path(resource, subpath=[])
-      resources = resource_parents(resource).reverse + [resource]
-      names = resources.map { |r| r.name } + subpath
-      if names.length == 1
-        '/'
-      else
-        names.join('/')
-      end
-    end
-
-    # Returns full url (protocol, host, port, etc)
+    # Returns full url (with protocol, host, port, etc)
     def resource_url(resource, subpath=[])
-      url(resource_path(resource, subpath))
+      url(Traversa.resource_path(resource, subpath))
+    end
+  end
+
+  # A minimal empty root resource.
+  class FallbackRoot
+    def name
+      ''
     end
 
+    def parent
+      nil
+    end
   end
 end
