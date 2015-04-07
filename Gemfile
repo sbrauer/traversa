@@ -1,3 +1,4 @@
 source 'https://rubygems.org'
 
-gem 'sinatra', '1.4.5'
+# Specify your gem's dependencies in traversa.gemspec
+gemspec

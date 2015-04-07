@@ -2,7 +2,7 @@
 # Root resource has a sub-resource "foo" ("/foo")
 # which in turn has a sub-resource "bar" ("/foo/bar").
 
-$LOAD_PATH.unshift File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 
 require 'traversa'
 
