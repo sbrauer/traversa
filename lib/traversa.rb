@@ -18,7 +18,7 @@ module Traversa
         end
       end
     end
-    TraversalResult.new(resource, [])
+    TraversalResult.new(resource, nil)
   end
 
   def self.coerce_subpath(subpath)
@@ -67,7 +67,7 @@ module Traversa
     end
 
     def success?
-      subpath.empty?
+      subpath.nil?
     end
   end
 end

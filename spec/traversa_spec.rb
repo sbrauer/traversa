@@ -19,15 +19,15 @@ describe Traversa do
       let(:result) { Traversa.traverse(@root, []) }
 
       it 'returns result where #success? is true' do
-        expect(result.success?).to eq(true)
+        expect(result.success?).to be(true)
       end
 
       it 'returns result where #resource is the input resource' do
         expect(result.resource).to eq(@root)
       end
 
-      it 'returns result where #subpath is empty array' do
-        expect(result.subpath).to eq([])
+      it 'returns result where #subpath is nil' do
+        expect(result.subpath).to be(nil)
       end
     end
 
@@ -36,7 +36,7 @@ describe Traversa do
         let(:result) { Traversa.traverse(@leaf, ['foo', 'bar']) }
 
         it 'returns result where #success? is false' do
-          expect(result.success?).to eq(false)
+          expect(result.success?).to be(false)
         end
 
         it 'returns result where #resource is the input resource' do
@@ -53,15 +53,15 @@ describe Traversa do
           let(:result) { Traversa.traverse(@root, ['branch', 'leaf']) }
 
           it 'returns result where #success? is true' do
-            expect(result.success?).to eq(true)
+            expect(result.success?).to be(true)
           end
 
           it 'returns result where #resource is the specified resource' do
             expect(result.resource).to eq(@leaf)
           end
 
-          it 'returns result where #subpath is empty array' do
-            expect(result.subpath).to eq([])
+          it 'returns result where #subpath is nil' do
+            expect(result.subpath).to be(nil)
           end
         end
 
@@ -69,7 +69,7 @@ describe Traversa do
           let(:result) { Traversa.traverse(@root, ['branch', 'foo', 'bar']) }
 
           it 'returns result where #success? is false' do
-            expect(result.success?).to eq(false)
+            expect(result.success?).to be(false)
           end
 
           it 'returns result where #resource is the last successfully traversed' do
@@ -88,15 +88,15 @@ describe Traversa do
         let(:result) { Traversa.traverse(@root, '') }
 
         it 'returns result where #success? is true' do
-          expect(result.success?).to eq(true)
+          expect(result.success?).to be(true)
         end
 
         it 'returns result where #resource is the input resource' do
           expect(result.resource).to eq(@root)
         end
 
-        it 'returns result where #subpath is empty array' do
-          expect(result.subpath).to eq([])
+        it 'returns result where #subpath is nil' do
+          expect(result.subpath).to be(nil)
         end
       end
 
@@ -104,15 +104,15 @@ describe Traversa do
         let(:result) { Traversa.traverse(@root, 'branch/leaf') }
 
         it 'returns result where #success? is true' do
-          expect(result.success?).to eq(true)
+          expect(result.success?).to be(true)
         end
 
         it 'returns result where #resource is the specified resource' do
           expect(result.resource).to eq(@leaf)
         end
 
-        it 'returns result where #subpath is empty array' do
-          expect(result.subpath).to eq([])
+        it 'returns result where #subpath is nil' do
+          expect(result.subpath).to be(nil)
         end
       end
     end
