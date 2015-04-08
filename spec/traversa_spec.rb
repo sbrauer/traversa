@@ -15,7 +15,7 @@ describe Traversa do
 
   describe '#traverse' do
 
-    context 'when names is empty' do
+    context 'when subpath is empty' do
       let(:result) { Traversa.traverse(@root, []) }
 
       it 'returns result where #success? is true' do
@@ -31,7 +31,7 @@ describe Traversa do
       end
     end
 
-    context 'when names is not empty' do
+    context 'when subpath is not empty' do
       context 'and resource does not respond to #child' do
         let(:result) { Traversa.traverse(@leaf, ['foo', 'bar']) }
 
@@ -49,7 +49,7 @@ describe Traversa do
       end
 
       context 'and resource does respond to #child' do
-        context 'and all names can be traversed' do
+        context 'and all subpath can be traversed' do
           let(:result) { Traversa.traverse(@root, ['branch', 'leaf']) }
 
           it 'returns result where #success? is true' do
@@ -65,7 +65,7 @@ describe Traversa do
           end
         end
 
-        context 'and all names cannot be traversed' do
+        context 'and all subpath cannot be traversed' do
           let(:result) { Traversa.traverse(@root, ['branch', 'foo', 'bar']) }
 
           it 'returns result where #success? is false' do
@@ -81,7 +81,40 @@ describe Traversa do
           end
         end
       end
+    end
 
+    describe 'it also handles subpath as a String' do
+      context 'when subpath is empty' do
+        let(:result) { Traversa.traverse(@root, '') }
+
+        it 'returns result where #success? is true' do
+          expect(result.success?).to eq(true)
+        end
+
+        it 'returns result where #resource is the input resource' do
+          expect(result.resource).to eq(@root)
+        end
+
+        it 'returns result where #subpath is empty array' do
+          expect(result.subpath).to eq([])
+        end
+      end
+
+      context 'when subpath is not empty' do
+        let(:result) { Traversa.traverse(@root, 'branch/leaf') }
+
+        it 'returns result where #success? is true' do
+          expect(result.success?).to eq(true)
+        end
+
+        it 'returns result where #resource is the specified resource' do
+          expect(result.resource).to eq(@leaf)
+        end
+
+        it 'returns result where #subpath is empty array' do
+          expect(result.subpath).to eq([])
+        end
+      end
     end
   end
 

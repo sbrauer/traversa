@@ -11,10 +11,10 @@ module Traversa
     options ('/*') { handle_request }
 
     def handle_request
-      names = params[:splat].first.split('/')
+      subpath = params[:splat].first
       request_method = request.request_method.downcase.to_sym
       request_method = :get if request_method == :head
-      handle_traversal_result(Traversa.traverse(root, names), request_method)
+      handle_traversal_result(Traversa.traverse(root, subpath), request_method)
     end
 
     def handle_traversal_result(result, request_method)

@@ -3,16 +3,27 @@ require 'traversa/app'
 
 module Traversa
   # Returns a TraversalResult object with the last resource traversed to and
-  # an array of names leftover after the last successful traversal.
-  def self.traverse(resource, names)
-    if resource.respond_to?(:child) && ! names.empty?
-      child = resource.child(names.first)
+  # remaining subpath.
+  # subpath arg should be either an array of strings or a slash-delimited string.
+  # In other words, 'foo/bar/baz' and ['foo', 'bar', 'baz'] are equivalent subpath values.
+  def self.traverse(resource, subpath)
+    subpath = coerce_subpath(subpath)
+    if resource.respond_to?(:child) && ! subpath.empty?
+      child = resource.child(subpath.first)
       if child
-        names.shift
-        return traverse(child, names)
+        subpath.shift
+        return traverse(child, subpath)
       end
     end
-    TraversalResult.new(resource, names)
+    TraversalResult.new(resource, subpath)
+  end
+
+  def self.coerce_subpath(subpath)
+    if subpath.class == String
+      subpath.split('/')
+    else
+      subpath
+    end
   end
 
   # Returns array of parent resources for the given resource.
