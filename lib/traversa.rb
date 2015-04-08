@@ -21,6 +21,7 @@ module Traversa
     TraversalResult.new(resource, nil)
   end
 
+  # Convert String subpath to an Array.
   def self.coerce_subpath(subpath)
     if subpath.class == String
       subpath.split('/')
