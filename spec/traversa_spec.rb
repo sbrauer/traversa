@@ -169,4 +169,11 @@ describe Traversa do
       end
     end
   end
+
+  describe '#resource_root' do
+    it 'returns root' do
+      expect(Traversa.resource_root(@leaf)).to eq(@root)
+    end
+  end
+
 end

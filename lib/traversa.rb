@@ -49,6 +49,11 @@ module Traversa
     [resource] + resource_parents(resource)
   end
 
+  # Given any resource, climb up to root and return it.
+  def self.resource_root(resource)
+    resource_lineage(resource).last
+  end
+
   # Returns path (starting with "/")
   def self.resource_path(resource, subpath=[])
     names = resource_lineage(resource).reverse.map { |r| r.name } + subpath
