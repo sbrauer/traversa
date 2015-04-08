@@ -1,6 +1,8 @@
 # Traversa
 A resource-oriented microframework for Ruby built on top of [Sinatra](http://www.sinatrarb.com/).
 
+*Status: Experimental work in progress*
+
 ## What do you mean by "resource-oriented"?
 First let's clarify that by "resource" I'm referring to the "R" in URL (Uniform Resource Locator).
 Traversa has the opinion that Resources are the primary abstraction that a webapp should be built around.
