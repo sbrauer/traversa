@@ -16,13 +16,15 @@ class Resource
   end
 
   def get(app, request, params)
+    path = Traversa.resource_path(self)
     app.content_type 'text/plain'
     [
       "Hello! My name is #{name.inspect}.",
       "",
       "parent: #{parent.inspect}",
-      "resource_path: #{Traversa.resource_path(self)}",
-      "resource_url: #{app.resource_url(self)}",
+      "resource_path: #{path.inspect}",
+      "url: #{app.url(path).inspect}",
+      "",
       "params: #{params.inspect}",
       "request: #{request.inspect}"
     ].join("\n")

@@ -11,12 +11,13 @@ module Traversa
     options ('/*') { handle_request }
 
     def handle_request
+      names = params[:splat].first.split('/')
       request_method = request.request_method.downcase.to_sym
       request_method = :get if request_method == :head
+      handle_traversal_result(Traversa.traverse(root, names), request_method)
+    end
 
-      names = params[:splat].first.split('/')
-      result = Traversa.traverse(root, names)
-
+    def handle_traversal_result(result, request_method)
       if result.success?
         handle_found(result.resource, request_method)
       else
@@ -44,11 +45,6 @@ module Traversa
     # Subclasses of App may override to return different status codes.
     def missing_status_code(request_method)
       request_method == :delete ? 204 : 404
-    end
-
-    # Returns full url (with protocol, host, port, etc)
-    def resource_url(resource, subpath=[])
-      url(Traversa.resource_path(resource, subpath))
     end
   end
 end
