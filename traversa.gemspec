@@ -10,7 +10,6 @@ Gem::Specification.new do |spec|
   spec.email         = ["sam.brauer@gmail.com"]
 
   spec.summary       = %q{A resource-oriented web microframework}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
   spec.homepage      = "https://github.com/sbrauer/traversa"
   spec.license       = "MIT"
 
