@@ -21,5 +21,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec"
 
+  # Use older rack to workaround show_exceptions bug
+  # http://stackoverflow.com/questions/26255022/why-is-sinatras-show-exceptions-rb-file-crashing-when-i-raise-a-runtimeerror
+  spec.add_dependency 'rack', '1.5.2'
   spec.add_dependency 'sinatra', '1.4.5'
 end
