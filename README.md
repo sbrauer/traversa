@@ -38,7 +38,7 @@ A resource is simply a Ruby object that implements the following interface:
 Only `#name` and `#parent` are required. The others are optional. Implement only what you need
 for your resource hierarchy and the HTTP methods you want to support. Generally you'll want to implement at least `#get`.
 
-Note that a resource is not a model (in the MVC sense). It's more like a controller. How you choose to implement and use resources is up to you as the developer. If you use models (generally a good idea), your resources could manipulate models much as you would with routes/controllers, or you could have models that implement the Resource interface (hmm). Traversa has no opinion other than that you should use Resources.
+Note that a resource is not a model (in the MVC sense). It's more like a controller (but a controller that can reach out and talk to other controllers/resources in the hierarchy). How you choose to implement and use resources is up to you as the developer. If you use models (generally a good idea), your resources could manipulate models much as you would with routes/controllers, or you could have models that implement the Resource interface (hmm). Traversa has no opinion other than that you should use Resources.
 
 Traversa splits the request path to obtain an array of names which it will attempt to traverse from the root down, asking each resource for the next child by name (using `#child`).
 Traversal ends when all names from the path are consumed, or when a resource doesn't respond
