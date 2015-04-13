@@ -54,7 +54,8 @@ module Traversa
     resource_lineage(resource).last
   end
 
-  # Returns path (starting with "/")
+  # Returns path (starting with "/"; doesn't take Rack routers or reverse
+  # proxies into account)
   def self.resource_path(resource, subpath=[])
     names = resource_lineage(resource).reverse.map { |r| r.name } + subpath
     if names.length == 1
@@ -62,6 +63,15 @@ module Traversa
     else
       names.join('/')
     end
+  end
+
+  # Returns absolute path (starting with "/" and taking Rack routers
+  # and reverse proxies into account)
+  def self.resource_abs_path(request, resource, subpath=[])
+    return resource_path(resource, subpath) if request.script_name == ''
+    names = resource_lineage(resource).reverse.map { |r| r.name } + subpath
+    names[0] = request.script_name
+    names.join('/')
   end
 
   class TraversalResult

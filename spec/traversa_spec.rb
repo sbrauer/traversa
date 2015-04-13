@@ -170,6 +170,37 @@ describe Traversa do
     end
   end
 
+  describe '#resource_abs_path' do
+    let(:request_with_script_name) { double(script_name: '/my/app') }
+    let(:request_without_script_name) { double(script_name: '') }
+
+    context 'when root resource' do
+      context 'when script_name' do
+        it 'returns script_name' do
+          expect(Traversa.resource_abs_path(request_with_script_name, @root)).to eq('/my/app')
+        end
+      end
+      context 'when no script_name' do
+        it 'returns slash' do
+          expect(Traversa.resource_abs_path(request_without_script_name, @root)).to eq('/')
+        end
+      end
+    end
+
+    context 'when non-root resource' do
+      context 'when script_name' do
+        it 'returns path prefixed with script_name' do
+          expect(Traversa.resource_abs_path(request_with_script_name, @leaf)).to eq('/my/app/branch/leaf')
+        end
+      end
+      context 'when no script_name' do
+        it 'returns path' do
+          expect(Traversa.resource_abs_path(request_without_script_name, @leaf)).to eq('/branch/leaf')
+        end
+      end
+    end
+  end
+
   describe '#resource_root' do
     it 'returns root' do
       expect(Traversa.resource_root(@leaf)).to eq(@root)
